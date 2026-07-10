@@ -27,6 +27,19 @@ app.get('/students/:id', (req, res) => {
     res.status(404).json({ error: "Student not found!" });
   }
 });
+app.post('/students', (req, res) => {
+  const { name, age, course } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ error: "Name is required!" });
+  }
+
+  const maxId = students.length > 0 ? Math.max(...students.map(s => s.id)) : 0;
+  const newStudent = { id: maxId + 1, name, age, course };
+
+  students.push(newStudent);
+  res.status(201).json(newStudent);
+});
 
   app.put('/students/:id', (req, res) => {
   const studentId = Number(req.params.id);
@@ -71,19 +84,6 @@ app.get("/health", (req, res) => {
     status: "OK",
     uptime: process.uptime()
   });
-});
-app.post('/students', (req, res) => {
-  const { name, age, course } = req.body;
-
-  if (!name) {
-    return res.status(400).json({ error: "Name is required!" });
-  }
-
-  const maxId = students.length > 0 ? Math.max(...students.map(s => s.id)) : 0;
-  const newStudent = { id: maxId + 1, name, age, course };
-
-  students.push(newStudent);
-  res.status(201).json(newStudent);
 });
 app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
