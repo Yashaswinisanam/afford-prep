@@ -14,11 +14,11 @@ app.get('/students', (req, res) => {
 // Step 3: GET /students/:id (Only one student by ID)
 app.get('/students/:id', (req, res) => {
   //from req.params.id string is returned, so we need to convert it to a number
-  const studentId = Number(req.params.id);
+  const studentId = Number(req.params.id)
   
   // in array check if student exists with the given ID
   const student = students.find(s => s.id === studentId);
-
+  
   if (student) {
     // If student exists, return 200 success status with the student data
     res.status(200).json(student);
@@ -27,6 +27,36 @@ app.get('/students/:id', (req, res) => {
     res.status(404).json({ error: "Student not found!" });
   }
 });
+
+  app.put('/students/:id', (req, res) => {
+  const studentId = Number(req.params.id);
+  const index = students.findIndex(s => s.id === studentId);
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Student not found" });
+  }
+
+  // Step 3: Spread operator tho merge cheyadam
+  // Patha data ki kotha req.body data ni join chesthunnam
+  // students[index] = { ...students[index], ...req.body };  it over writes the existing student data with the new data from req.body
+  students[index] = { ...students[index], ...req.body, id: studentId };
+
+  // Step 4: Success response
+  res.status(200).json(students[index]);
+});
+// Step 5: DELETE /students/:id (Delete a student by ID)
+app.delete('/students/:id', (req, res) => {
+  const studentId = Number(req.params.id);
+  const index = students.findIndex(s => s.id === studentId);
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Student not found" });
+  }
+
+  students.splice(index, 1);
+  res.status(200).json({ message: "Student deleted successfully" });
+});
+
 app.get('/',(req,res)=>{
     res.json({message:'server is listening '});
 });
