@@ -1,5 +1,6 @@
 const express=require ('express');
 const app=express();
+app.use(express.json());
 app.get('/',(req,res)=>{
     res.json({message:'server is listening '});
 });
@@ -14,6 +15,10 @@ app.get("/health", (req, res) => {
     status: "OK",
     uptime: process.uptime()
   });
+});
+app.post('/students', (req, res) => {
+  console.log(req.body);
+  res.json({ received: req.body });
 });
 app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
