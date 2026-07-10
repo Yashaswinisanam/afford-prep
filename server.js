@@ -15,6 +15,9 @@ app.get("/health", (req, res) => {
     uptime: process.uptime()
   });
 });
+app.use((req, res) => {
+  res.status(404).json({ error: "Not Found" });
+});
 app.listen(3000,()=>{
     console.log('server is running on port 3000');
 });
